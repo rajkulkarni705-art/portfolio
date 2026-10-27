@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Hub | Profile, Connections, Achievements & Aim</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.8);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen flex flex-col">
+
+    <!-- NAVIGATION HEADER -->
+    <header class="sticky top-0 z-40 glass border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand / Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('profile')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-brand-600 to-violet-500 bg-clip-text text-transparent">Personal Hub</span>
+                        <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-semibold bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-full uppercase">Portfolio</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation: 4 MAIN SECTIONS ONLY -->
+                <nav class="hidden md:flex items-center gap-1">
+                    <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-brand-500/10 text-brand-600 dark:text-brand-400">
+                        <i data-lucide="user-circle" class="w-4 h-4"></i> Profile
+                    </button>
+                    <button onclick="switchTab('connections')" id="nav-connections" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i data-lucide="share-2" class="w-4 h-4"></i> Connections
+                    </button>
+                    <button onclick="switchTab('achievements')" id="nav-achievements" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i data-lucide="award" class="w-4 h-4"></i> Achievements
+                    </button>
+                    <button onclick="switchTab('aim')" id="nav-aim" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <i data-lucide="target" class="w-4 h-4"></i> Aim & Goals
+                    </button>
+                </nav>
+
+                <!-- Actions: Theme Switcher & GitHub Guide Trigger -->
+                <div class="flex items-center gap-2.5">
+                    <button onclick="openGithubModal()" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors">
+                        <i data-lucide="github" class="w-4 h-4"></i> Deploy
+                    </button>
+                    <button id="theme-toggle" onclick="toggleTheme()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors">
+                        <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-900/95 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('profile'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-3 text-brand-600 dark:text-brand-400 bg-brand-500/10">
+                <i data-lucide="user-circle" class="w-4 h-4"></i> Profile
+            </button>
+            <button onclick="switchTab('connections'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <i data-lucide="share-2" class="w-4 h-4"></i> Connections
+            </button>
+            <button onclick="switchTab('achievements'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <i data-lucide="award" class="w-4 h-4"></i> Achievements
+            </button>
+            <button onclick="switchTab('aim'); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                <i data-lucide="target" class="w-4 h-4"></i> Aim & Goals
+            </button>
+            <button onclick="openGithubModal(); toggleMobileMenu()" class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-3 text-indigo-500">
+                <i data-lucide="github" class="w-4 h-4"></i> Deployment Guide
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. PROFILE SECTION -->
+        <section id="tab-profile" class="tab-content space-y-8">
+            <!-- Banner & Avatar Card -->
+            <div class="relative rounded-3xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl">
+                <!-- Cover Banner -->
+                <div class="h-44 sm:h-56 bg-gradient-to-r from-brand-600 via-indigo-600 to-violet-700 relative">
+                    <div class="absolute inset-0 bg-black/10"></div>
+                    <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Available for Projects & Tech Lead Roles
+                    </div>
+                </div>
+
+                <!-- Avatar & Core Metadata -->
+                <div class="px-6 sm:px-10 pb-8 relative">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-16 sm:-mt-20 mb-6">
+                        <div class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-2xl p-1 bg-white dark:bg-slate-900 shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="Avatar" class="w-full h-full object-cover rounded-xl">
+                            <div class="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900" title="Online / Active"></div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="switchTab('connections')" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs transition-colors shadow-lg shadow-brand-500/25 flex items-center gap-2">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i> Get in Touch
+                            </button>
+                            <button onclick="openGithubModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs transition-colors flex items-center gap-2">
+                                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Deploy This App
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Personal Bio Header -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Alex Rivera</h1>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">Software Engineer</span>
+                        </div>
+                        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
+                            Passionate Full-Stack Developer & Systems Architect focused on building responsive, high-performance web applications and sleek developer portals. Dedicated to clean code, modular design systems, and continuous personal growth.
+                        </p>
+                        <div class="flex flex-wrap gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 pt-2">
+                            <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-brand-500"></i> San Francisco, CA</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="briefcase" class="w-4 h-4 text-brand-500"></i> Senior Frontend Engineer</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-4 h-4 text-brand-500"></i> 6+ Years Experience</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills & Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Core Competencies -->
+                <div class="md:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <i data-lucide="code-2" class="w-5 h-5 text-brand-500"></i> Key Technical Skills
+                    </h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="font-bold text-xs text-slate-800 dark:text-slate-200">React & Next.js</div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-full w-[92%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="font-bold text-xs text-slate-800 dark:text-slate-200">TypeScript / JS</div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-full w-[95%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="font-bold text-xs text-slate-800 dark:text-slate-200">Tailwind CSS</div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-full w-[90%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="font-bold text-xs text-slate-800 dark:text-slate-200">Node.js & Python</div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-full w-[85%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="font-bold text-xs text-slate-800 dark:text-slate-200">System Architecture</div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-full w-[80%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 space-y-1">
+                            <div class="font-bold text-xs text-slate-800 dark:text-slate-200">Git & CI/CD</div>
+                            <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="bg-brand-500 h-full w-[88%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Personal Highlights -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> Daily Quick Status
+                    </h2>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 rounded-xl bg-brand-50 dark:bg-brand-950/40 border border-brand-200 dark:border-brand-900/50">
+                            <div class="font-bold text-brand-600 dark:text-brand-400 mb-0.5">🚀 Current Focus</div>
+                            <div class="text-slate-600 dark:text-slate-300">Building scalable developer dashboards & mastering GraphQL microservices.</div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="font-bold text-slate-800 dark:text-slate-200 mb-0.5">📖 Currently Reading</div>
+                            <div class="text-slate-500">"Designing Data-Intensive Applications" by Martin Kleppmann.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. CONNECTIONS SECTION -->
+        <section id="tab-connections" class="tab-content hidden space-y-8">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight">Connections & Network</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Reach out via professional channels, copy verified handles, or send a quick direct message.</p>
+            </div>
+
+            <!-- Social Media Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- LinkedIn -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500/50 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">LinkedIn</h3>
+                            <p class="text-xs text-slate-400">/in/alex-rivera-dev</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('https://linkedin.com/in/alex-rivera-dev')" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="Copy Link">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- GitHub -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500/50 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-slate-500/10 text-slate-800 dark:text-slate-200 flex items-center justify-center">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">GitHub</h3>
+                            <p class="text-xs text-slate-400">@alexrivera-code</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('https://github.com/alexrivera-code')" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="Copy Link">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Email -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500/50 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Email Direct</h3>
+                            <p class="text-xs text-slate-400">alex.rivera@example.com</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('alex.rivera@example.com')" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="Copy Email">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Twitter / X -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500/50 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Twitter / X</h3>
+                            <p class="text-xs text-slate-400">@arivera_builds</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('https://x.com/arivera_builds')" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="Copy Handle">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Discord -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500/50 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+                            <i data-lucide="message-square" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Discord</h3>
+                            <p class="text-xs text-slate-400">arivera#9021</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('arivera#9021')" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="Copy Tag">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Resume Link -->
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-brand-500/50 transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Curriculum Vitae</h3>
+                            <p class="text-xs text-slate-400">PDF Document</p>
+                        </div>
+                    </div>
+                    <button onclick="alert('Downloading CV preview...')" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="Download CV">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Direct Message Form -->
+            <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 max-w-2xl">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i data-lucide="send" class="w-5 h-5 text-brand-500"></i> Send a Direct Note
+                </h3>
+                <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">Your Name</label>
+                            <input type="text" id="contact-name" placeholder="John Doe" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">Your Email</label>
+                            <input type="email" id="contact-email" placeholder="john@example.com" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Message</label>
+                        <textarea id="contact-message" rows="3" placeholder="Hi Alex, let's connect regarding..." required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                    </div>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-lg shadow-brand-500/20">
+                        <i data-lucide="send" class="w-3.5 h-3.5"></i> Dispatch Message
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. ACHIEVEMENTS SECTION -->
+        <section id="tab-achievements" class="tab-content hidden space-y-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight">Achievements & Milestone Cards</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">Verified certifications, key project launches, and career awards.</p>
+                </div>
+                <!-- Category Filter -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1">
+                    <button onclick="filterAchievements('all')" class="ach-filter active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-600 text-white">All</button>
+                    <button onclick="filterAchievements('Certifications')" class="ach-filter px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Certifications</button>
+                    <button onclick="filterAchievements('Milestones')" class="ach-filter px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Milestones</button>
+                    <button onclick="filterAchievements('Awards')" class="ach-filter px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Awards</button>
+                </div>
+            </div>
+
+            <!-- Achievements Cards Grid -->
+            <div id="achievements-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Javascript populated cards -->
+            </div>
+        </section>
+
+        <!-- 4. AIM SECTION -->
+        <section id="tab-aim" class="tab-content hidden space-y-8">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight">Vision Statement & Career Aim</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Track short-term goals and long-term milestones with auto-saving progress indicators.</p>
+            </div>
+
+            <!-- Vision Statement Banner -->
+            <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 text-white border border-slate-800 shadow-xl space-y-3">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-500/30 text-brand-300 text-xs font-semibold">
+                    <i data-lucide="compass" class="w-3.5 h-3.5"></i> Strategic Horizon
+                </div>
+                <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight">"Build software that empowers millions while continuously mastering cloud systems architecture."</h3>
+                <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                    My core aim is to leverage technology to solve complex user problems, foster collaborative engineer culture, and launch high-impact open-source tools.
+                </p>
+            </div>
+
+            <!-- Goal Progress Tracker Bar -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div class="flex items-center justify-between text-sm font-bold">
+                    <span class="flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i> Overall Goals Progress</span>
+                    <span id="goals-progress-percent" class="text-brand-600 dark:text-brand-400">0% Completed</span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div id="goals-progress-bar" class="h-full bg-gradient-to-r from-brand-500 to-emerald-500 transition-all duration-500 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Interactive Goal Checklist Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Short Term Goals -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <h3 class="font-bold text-base flex items-center gap-2 text-brand-600 dark:text-brand-400">
+                        <i data-lucide="clock" class="w-5 h-5"></i> Short-Term Objectives (2026 - 2027)
+                    </h3>
+                    <div id="short-term-goals-list" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Long Term Vision -->
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <h3 class="font-bold text-base flex items-center gap-2 text-violet-600 dark:text-violet-400">
+                        <i data-lucide="flag" class="w-5 h-5"></i> Long-Term Vision (3-5 Years)
+                    </h3>
+                    <div id="long-term-goals-list" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center sm:flex sm:justify-between sm:items-center text-xs text-slate-500 dark:text-slate-400">
+            <p>© 2026 Alex Rivera. All rights reserved.</p>
+            <div class="mt-2 sm:mt-0 space-x-4">
+                <button onclick="switchTab('profile')" class="hover:underline">Profile</button>
+                <button onclick="switchTab('connections')" class="hover:underline">Connections</button>
+                <button onclick="switchTab('achievements')" class="hover:underline">Achievements</button>
+                <button onclick="switchTab('aim')" class="hover:underline">Aim</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GITHUB PAGES DEPLOYMENT MODAL -->
+    <div id="github-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="github" class="w-6 h-6 text-brand-500"></i>
+                    <h3 class="font-bold text-lg">GitHub Pages Deployment Guide</h3>
+                </div>
+                <button onclick="closeGithubModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <div class="space-y-1">
+                    <p class="font-bold text-slate-900 dark:text-slate-100">Step 1: Save file</p>
+                    <p>Save this application code in a file named <code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-brand-500 font-mono">index.html</code> inside your local project directory.</p>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="font-bold text-slate-900 dark:text-slate-100">Step 2: Initialize Git & Push to GitHub</p>
+                    <div class="bg-slate-950 text-emerald-400 p-3 rounded-xl font-mono text-xs space-y-1 overflow-x-auto">
+                        <p>git init</p>
+                        <p>git add index.html</p>
+                        <p>git commit -m "Initial portfolio release"</p>
+                        <p>git branch -M main</p>
+                        <p>git remote add origin https://github.com/YOUR_USERNAME/portfolio.git</p>
+                        <p>git push -u origin main</p>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="font-bold text-slate-900 dark:text-slate-100">Step 3: Enable Pages</p>
+                    <p>Go to your GitHub repository: <strong>Settings &rarr; Pages &rarr; Source</strong> select <code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-brand-500 font-mono">main branch</code> and save. Your site will be published live at <code class="text-brand-500">https://username.github.io/portfolio</code>!</p>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeGithubModal()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs transition-colors">
+                    Got it, Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION JAVASCRIPT LOGIC -->
+    <script>
+        // Application State
+        const state = {
+            theme: localStorage.getItem('portal_theme') || 'dark',
+            achievements: [
+                { id: 1, title: 'AWS Cloud Solutions Architect', category: 'Certifications', date: '2025', badge: 'Verified AWS', desc: 'Passed professional exam with focus on cloud architecture and distributed microservices.' },
+                { id: 2, title: 'Open Source Tool Launch', category: 'Milestones', date: '2026', badge: '1,000+ Stars', desc: 'Designed and deployed developer UI tool used by software engineers globally.' },
+                { id: 3, title: 'Hackathon First Place Winner', category: 'Awards', date: '2025', badge: '1st Place', desc: 'Built a real-time collaborative dashboard app within 24 hours.' },
+                { id: 4, title: 'Meta Frontend Professional', category: 'Certifications', date: '2024', badge: 'Certified', desc: 'Comprehensive mastery over React, state management, and performance optimization.' }
+            ],
+            goals: JSON.parse(localStorage.getItem('portal_goals')) || [
+                { id: 1, text: 'Deploy single-page personal hub on GitHub Pages', type: 'short', completed: true },
+                { id: 2, text: 'Master TypeScript design patterns and generics', type: 'short', completed: true },
+                { id: 3, text: 'Publish 5 technical articles on Web Dev', type: 'short', completed: false },
+                { id: 4, text: 'Lead software engineering team at tech organization', type: 'long', completed: false },
+                { id: 5, text: 'Contribute major PR to popular open-source repository', type: 'long', completed: false }
+            ]
+        };
+
+        // Initialize Application
+        window.onload = function() {
+            lucide.createIcons();
+            initTheme();
+            renderAchievements('all');
+            renderGoals();
+        };
+
+        // Theme Switcher
+        function initTheme() {
+            if (state.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('portal_theme', state.theme);
+            initTheme();
+        }
+
+        // Navigation Switcher for 4 SECTIONS
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-500/10', 'text-brand-600', 'dark:text-brand-400');
+                btn.classList.add('text-slate-600', 'dark:text-slate-400');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-brand-500/10', 'text-brand-600', 'dark:text-brand-400');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Connections Copy Helper
+        function copyText(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert(`Copied to clipboard: ${text}`);
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('contact-name').value;
+            alert(`Thank you ${name}! Your note was dispatched successfully.`);
+            e.target.reset();
+        }
+
+        // Achievements Render & Filter
+        function renderAchievements(cat) {
+            const grid = document.getElementById('achievements-cards-grid');
+            if (!grid) return;
+
+            const filtered = cat === 'all' 
+                ? state.achievements 
+                : state.achievements.filter(a => a.category === cat);
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 hover:border-brand-500/50 transition-all flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-1 rounded-md bg-brand-500/10 text-brand-600 dark:text-brand-400 text-xs font-bold">${item.category}</span>
+                            <span class="text-xs text-slate-400 font-medium">${item.date}</span>
+                        </div>
+                        <h3 class="font-bold text-base text-slate-900 dark:text-slate-100">${item.title}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">${item.desc}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                        <span class="text-[11px] font-semibold text-emerald-500 flex items-center gap-1">
+                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> ${item.badge}
+                        </span>
+                        <i data-lucide="award" class="w-4 h-4 text-slate-400"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function filterAchievements(cat) {
+            document.querySelectorAll('.ach-filter').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+            });
+            event.target.classList.add('bg-brand-600', 'text-white');
+            renderAchievements(cat);
+        }
+
+        // Goals & Aim Checklist Logic
+        function renderGoals() {
+            const shortContainer = document.getElementById('short-term-goals-list');
+            const longContainer = document.getElementById('long-term-goals-list');
+
+            const shortGoals = state.goals.filter(g => g.type === 'short');
+            const longGoals = state.goals.filter(g => g.type === 'long');
+
+            const renderGoalItem = (g) => `
+                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer hover:border-brand-500/50 transition-colors">
+                    <input type="checkbox" ${g.completed ? 'checked' : ''} onchange="toggleGoal(${g.id})" class="mt-0.5 w-4 h-4 rounded text-brand-600 focus:ring-brand-500">
+                    <span class="text-xs font-medium ${g.completed ? 'line-through text-slate-400' : 'text-slate-800 dark:text-slate-200'}">${g.text}</span>
+                </label>
+            `;
+
+            if (shortContainer) shortContainer.innerHTML = shortGoals.map(renderGoalItem).join('');
+            if (longContainer) longContainer.innerHTML = longGoals.map(renderGoalItem).join('');
+
+            // Calculate Progress Bar
+            const completed = state.goals.filter(g => g.completed).length;
+            const percentage = Math.round((completed / state.goals.length) * 100) || 0;
+
+            const progressBar = document.getElementById('goals-progress-bar');
+            const progressPercent = document.getElementById('goals-progress-percent');
+
+            if (progressBar) progressBar.style.width = `${percentage}%`;
+            if (progressPercent) progressPercent.innerText = `${percentage}% Completed`;
+        }
+
+        function toggleGoal(id) {
+            state.goals = state.goals.map(g => g.id === id ? { ...g, completed: !g.completed } : g);
+            localStorage.setItem('portal_goals', JSON.stringify(state.goals));
+            renderGoals();
+        }
+
+        // GitHub Modal
+        function openGithubModal() {
+            const modal = document.getElementById('github-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeGithubModal() {
+            const modal = document.getElementById('github-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
